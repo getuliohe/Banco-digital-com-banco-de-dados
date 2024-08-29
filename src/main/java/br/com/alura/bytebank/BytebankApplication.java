@@ -62,7 +62,7 @@ public class BytebankApplication {
         return teclado.nextInt();
     }
 
-    private static void listarContas() {
+    private static void listarContas() throws SQLException {
         System.out.println("Contas cadastradas:");
         var contas = service.listarContasAbertas();
         contas.stream().forEach(System.out::println);

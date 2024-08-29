@@ -2,5 +2,5 @@
 <br>
 <h2>Objetivo</h2>
 <p>
-Criar um sistema de banco digital em Java com banco de dados
+Criar um sistema de banco digital em Java com banco de dados e usar um pool de conexão
 </p>
