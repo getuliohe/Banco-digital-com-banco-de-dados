@@ -125,7 +125,7 @@ public class BytebankApplication {
         teclado.next();
     }
 
-    private static void realizarDeposito() {
+    private static void realizarDeposito() throws SQLException {
         System.out.println("Digite o número da conta:");
         var numeroDaConta = teclado.nextInt();
 
