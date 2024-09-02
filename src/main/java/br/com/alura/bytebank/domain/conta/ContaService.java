@@ -35,7 +35,7 @@ public class ContaService {
         new ContaDAO(conn).salvar(dadosDaConta);
     }
 
-    public void realizarSaque(Integer numeroDaConta, BigDecimal valor) {
+    public void realizarSaque(Integer numeroDaConta, BigDecimal valor) throws SQLException {
         var conta = buscarContaPorNumero(numeroDaConta);
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do saque deve ser superior a zero!");
@@ -44,8 +44,8 @@ public class ContaService {
         if (valor.compareTo(conta.getSaldo()) > 0) {
             throw new RegraDeNegocioException("Saldo insuficiente!");
         }
-
-        conta.sacar(valor);
+        Connection conn = connection.recuperaConexao();
+        new ContaDAO(conn).alterar(numeroDaConta, conta.getSaldo().subtract(valor));
     }
 
     public void realizarDeposito(Integer numeroDaConta, BigDecimal valor) throws SQLException {
@@ -56,7 +56,7 @@ public class ContaService {
 
         Connection conn = connection.recuperaConexao();
 
-        new ContaDAO(conn).alterar(numeroDaConta, valor);
+        new ContaDAO(conn).alterar(numeroDaConta, conta.getSaldo().add(valor));
 
 
     }
