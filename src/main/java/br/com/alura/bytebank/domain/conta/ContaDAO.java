@@ -21,14 +21,14 @@ public class ContaDAO {
 
     public void salvar(DadosAberturaConta dadosDaConta) throws SQLException {
         var cliente = new Cliente(dadosDaConta.dadosCliente());
-        var conta = new Conta(dadosDaConta.numero(), cliente);
+        var conta = new Conta(dadosDaConta.numero(), BigDecimal.ZERO, cliente);
 
         String sql = "INSERT INTO conta (numero, saldo, cliente_nome, cliente_cpf, cliente_email)"
                 + "VALUES (?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = this.conn.prepareStatement(sql);
 
         preparedStatement.setInt(1,conta.getNumero());
-        preparedStatement.setBigDecimal(2, BigDecimal.ZERO);
+        preparedStatement.setBigDecimal(2, conta.getSaldo());
         preparedStatement.setString(3,dadosDaConta.dadosCliente().nome());
         preparedStatement.setString(4,dadosDaConta.dadosCliente().cpf());
         preparedStatement.setString(5,dadosDaConta.dadosCliente().email());
@@ -58,7 +58,7 @@ public class ContaDAO {
                     new DadosCadastroCliente(nome, cpf, email);
 
             Cliente cliente = new Cliente(dadosCadastroCliente);
-            contas.add(new Conta(numero, cliente));
+            contas.add(new Conta(numero, saldo, cliente));
         }
         resultSet.close();
         ps.close();
@@ -89,7 +89,7 @@ public class ContaDAO {
                         new DadosCadastroCliente(nome, cpf, email);
                 Cliente cliente = new Cliente(dadosCadastroCliente);
 
-                conta = new Conta(numeroRecuperado, cliente);
+                conta = new Conta(numeroRecuperado, saldo, cliente);
             }
             resultSet.close();
             ps.close();
@@ -109,5 +109,17 @@ public class ContaDAO {
         preparedStatement.execute();
         preparedStatement.close();
         conn.close();
+    }
+
+    public void deletar(Integer numeroDaConta) throws SQLException {
+        String sql = "DELETE FROM conta WHERE numero = ?";
+
+        PreparedStatement preparedStatement = this.conn.prepareStatement(sql);
+        preparedStatement.setInt(1, numeroDaConta);
+
+        preparedStatement.execute();
+        preparedStatement.close();
+        conn.close();
+
     }
 }

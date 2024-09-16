@@ -55,19 +55,24 @@ public class ContaService {
         }
 
         Connection conn = connection.recuperaConexao();
-
-        new ContaDAO(conn).alterar(numeroDaConta, conta.getSaldo().add(valor));
+        new ContaDAO(conn).alterar(conta.getNumero(), conta.getSaldo().add(valor));
 
 
     }
 
-    public void encerrar(Integer numeroDaConta) {
+    public void realizarTransferencia(Integer numeroDaContaOrigem, Integer numeroContaDestino, BigDecimal valor) throws SQLException {
+        this.realizarSaque(numeroDaContaOrigem, valor);
+        this.realizarDeposito(numeroContaDestino, valor);
+    }
+
+    public void encerrar(Integer numeroDaConta) throws SQLException {
         var conta = buscarContaPorNumero(numeroDaConta);
         if (conta.possuiSaldo()) {
             throw new RegraDeNegocioException("Conta não pode ser encerrada pois ainda possui saldo!");
         }
 
-        contas.remove(conta);
+        Connection conn = connection.recuperaConexao();
+        new ContaDAO(conn).deletar(numeroDaConta);
     }
 
     public Conta buscarContaPorNumero(Integer numero) {
